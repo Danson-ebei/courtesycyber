@@ -25,6 +25,40 @@
       background: linear-gradient(180deg, #071028 0%, #05101a 100%);
       color: #e6eef6
     }
+<div class="floating-buttons">
+  <a href="tel:+254741671203" class="fab call" title="Call Us">📞</a>
+  <a href="sms:+254741671203" class="fab sms" title="Send SMS">✉️</a>
+  <a href="https://wa.me/254741671203" target="_blank" class="fab whatsapp" title="Chat on WhatsApp">💬</a>
+</div>
+.floating-buttons {
+  position: fixed;
+  right: 18px;
+  bottom: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 1000;
+}
+
+.fab {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none;
+  background: linear-gradient(135deg, var(--accent), #8b5cf6);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  transition: transform 0.2s ease;
+}
+
+.fab:hover {
+  transform: scale(1.1);
+}
 
     a {
       color: inherit;
@@ -545,5 +579,4 @@
     })
   </script>
 </body>
-
 </html>
