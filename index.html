@@ -8,12 +8,9 @@
   <style>
     :root {
       --bg: #0f1724;
-      --card: #0b1220;
       --accent: #06b6d4;
       --muted: #94a3b8;
-      --glass: rgba(255, 255, 255, 0.04);
       --maxw: 1100px;
-      --radius: 14px;
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial;
     }
 
@@ -33,16 +30,15 @@
     .container {
       max-width: var(--maxw);
       margin: 0 auto;
-      padding: 28px;
+      padding: 20px;
     }
 
-    /* Navigation */
+    /* Sticky header */
     header {
-      backdrop-filter: blur(6px);
       position: sticky;
       top: 0;
       z-index: 50;
-      background: rgba(15, 23, 36, 0.85);
+      background: rgba(15, 23, 36, 0.95);
       padding: 10px 0;
     }
 
@@ -50,100 +46,87 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px;
-      border-radius: 12px;
+      padding: 10px;
     }
 
     .brand {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       align-items: center;
     }
 
     .logo {
-      width: 48px;
-      height: 48px;
-      border-radius: 10px;
+      width: 45px;
+      height: 45px;
       background: linear-gradient(135deg, var(--accent), #8b5cf6);
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 700;
+      color: #021025;
     }
 
     nav ul {
       display: flex;
-      gap: 40px;
+      gap: 30px;
       list-style: none;
       margin: 0;
       padding: 0;
     }
 
     nav a {
-      padding: 8px 12px;
-      border-radius: 8px;
+      padding: 6px 10px;
       color: var(--muted);
       font-weight: 600;
     }
 
     nav a:hover {
-      background: var(--glass);
       color: #fff;
     }
 
     .cta {
       background: linear-gradient(90deg, var(--accent), #8b5cf6);
-      padding: 8px 14px;
-      border-radius: 10px;
+      padding: 8px 12px;
       font-weight: 700;
       color: #021025;
       border: none;
       cursor: pointer;
     }
 
-    /* Floating Action Buttons */
+    /* Floating buttons */
     .floating-buttons {
       position: fixed;
-      right: 18px;
-      bottom: 80px;
+      right: 15px;
+      bottom: 70px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
       z-index: 1000;
     }
 
     .fab {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
+      width: 50px;
+      height: 50px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
+      font-size: 22px;
       color: #fff;
       text-decoration: none;
       background: linear-gradient(135deg, var(--accent), #8b5cf6);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-      transition: transform 0.2s ease;
     }
 
-    .fab:hover {
-      transform: scale(1.1);
-    }
-
-    /* Hero */
     .hero {
       display: grid;
-      grid-template-columns: 1fr 420px;
-      gap: 28px;
+      grid-template-columns: 1fr 400px;
+      gap: 25px;
       align-items: center;
-      margin: 28px 0;
+      margin: 25px 0;
     }
 
     .hero-card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-      padding: 16px;
-      border-radius: var(--radius);
+      background: transparent;
+      padding: 10px;
     }
 
     .hero-card h2, .hero-card h3, .hero-card p {
@@ -153,63 +136,58 @@
     .quick-list {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
+      gap: 8px;
     }
 
     .pill {
       background: rgba(255,255,255,0.05);
-      padding: 10px;
-      border-radius: 10px;
+      padding: 8px;
       text-align: center;
       font-weight: 600;
     }
 
-    /* Services */
     .section {
-      margin: 28px 0;
+      margin: 25px 0;
     }
 
     .grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
+      gap: 15px;
     }
 
     .card {
       background: rgba(255,255,255,0.03);
-      padding: 16px;
-      border-radius: 10px;
+      padding: 12px;
     }
 
     .card h3 {
-      margin-bottom: 8px;
+      margin-bottom: 5px;
     }
 
     .card ul {
       color: var(--muted);
-      padding-left: 18px;
+      padding-left: 15px;
     }
 
     /* Contact */
     .contact-wrap {
       display: grid;
-      grid-template-columns: 1fr 360px;
+      grid-template-columns: 1fr 350px;
       gap: 20px;
     }
 
     .form input, .form textarea, .form select {
       width: 100%;
-      padding: 12px;
-      border-radius: 5px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: transparent;
+      padding: 10px;
+      border: none;
+      background: rgba(255,255,255,0.06);
       color: inherit;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .btn {
-      padding: 10px 14px;
-      border-radius: 10px;
+      padding: 10px 12px;
       font-weight: 700;
       background: linear-gradient(90deg, var(--accent), #8b5cf6);
       color: #021025;
@@ -217,37 +195,33 @@
       cursor: pointer;
     }
 
-    /* Footer */
     footer {
       position: sticky;
       bottom: 0;
-      width: 100%;
       background: #0b1220;
       padding: 14px 0;
       text-align: center;
-      border-top: 1px solid rgba(255,255,255,0.05);
     }
 
     .socials {
       display: flex;
       justify-content: center;
-      gap: 18px;
-      margin-top: 8px;
+      gap: 15px;
+      margin-top: 6px;
     }
 
     .socials a {
-      font-size: 22px;
+      font-size: 20px;
       color: var(--accent);
     }
 
-    /* Mobile */
     @media (max-width: 900px) {
       nav ul {
         display: none;
       }
       .mobile-toggle {
         display: block;
-        font-size: 26px;
+        font-size: 24px;
         background: none;
         color: white;
         border: none;
@@ -294,8 +268,8 @@
           <div class="quick-list">
             <div class="pill">KRA — PIN & Filing</div>
             <div class="pill">NTSA — TIMS & Plates</div>
-            <div class="pill">eCitizen — Accounts & Passport</div>
-            <div class="pill">HELB & KUCCPS Support</div>
+            <div class="pill">eCitizen — Passport</div>
+            <div class="pill">HELB & KUCCPS</div>
           </div>
         </div>
 
@@ -307,7 +281,7 @@
         </aside>
       </section>
 
-      <section id="about" class="section hero-card">
+      <section id="about" class="section">
         <h2>About Courtesy Cyber</h2>
         <p>We are a one-stop digital service provider in Lodwar Town — handling government, ICT, and academic services with professionalism and speed.</p>
       </section>
@@ -324,11 +298,11 @@
       <section id="contact" class="section">
         <h2>Contact & Requests</h2>
         <div class="contact-wrap">
-          <div class="hero-card form">
-            <input type="text" id="name" placeholder="Full names">
-            <input type="text" id="phone" placeholder="Phone (e.g. +2547...)">
-            <input type="email" id="email" placeholder="Email address">
-            <select id="serviceSel">
+          <form class="form" method="POST" action="send-mail.php">
+            <input type="text" name="name" placeholder="Full names" required>
+            <input type="text" name="phone" placeholder="Phone (e.g. +2547...)" required>
+            <input type="email" name="email" placeholder="Email address" required>
+            <select name="service" required>
               <option value="">-- Select service --</option>
               <option>KRA</option>
               <option>NTSA</option>
@@ -336,12 +310,11 @@
               <option>HELB</option>
               <option>Other</option>
             </select>
-            <textarea id="message" rows="5" placeholder="Describe your request..."></textarea>
-            <button class="btn" id="sendBtn">Send Request</button>
-            <div id="formStatus" class="muted"></div>
-          </div>
+            <textarea name="message" rows="5" placeholder="Describe your request..." required></textarea>
+            <button class="btn" type="submit">Send Request</button>
+          </form>
 
-          <div class="hero-card">
+          <div>
             <h3>Visit / Pay</h3>
             <p>Located Opposite KCB Bank, Lodwar.</p>
             <p>Paybill: <strong>522533</strong><br>Account: <strong>9600444</strong></p>
@@ -351,21 +324,19 @@
     </main>
   </div>
 
-  <!-- Floating Action Buttons -->
   <div class="floating-buttons">
-    <a href="tel:+254741671203" class="fab" title="Call Us">📞</a>
-    <a href="sms:+254741671203" class="fab" title="Send SMS">✉️</a>
-    <a href="https://wa.me/254741671203" target="_blank" class="fab" title="Chat on WhatsApp">💬</a>
+    <a href="tel:+254741671203" class="fab">📞</a>
+    <a href="sms:+254741671203" class="fab">✉️</a>
+    <a href="https://wa.me/254741671203" target="_blank" class="fab">💬</a>
   </div>
 
-  <!-- Sticky Footer -->
   <footer>
     <div>© <span id="year"></span> COURTESY CYBER — All Rights Reserved</div>
     <div class="socials">
-      <a href="https://facebook.com" target="_blank" title="Facebook">📘</a>
-      <a href="https://wa.me/254741671203" target="_blank" title="WhatsApp">💬</a>
-      <a href="https://instagram.com" target="_blank" title="Instagram">📸</a>
-      <a href="mailto:courtesyclients@gmail.com" title="Email">✉️</a>
+      <a href="https://facebook.com" target="_blank">📘</a>
+      <a href="https://wa.me/254741671203" target="_blank">💬</a>
+      <a href="https://instagram.com" target="_blank">📸</a>
+      <a href="mailto:courtesyclients@gmail.com">✉️</a>
     </div>
   </footer>
 
@@ -375,20 +346,54 @@
       const nav = document.getElementById('navItems');
       nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
       nav.style.flexDirection = 'column';
-      nav.style.gap = '10px';
-      nav.style.marginTop = '10px';
-    });
-    document.getElementById('sendBtn').addEventListener('click', () => {
-      const name = document.getElementById('name').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const service = document.getElementById('serviceSel').value;
-      const status = document.getElementById('formStatus');
-      if (!name || !phone || !service) {
-        status.textContent = 'Please fill in all required fields.';
-        return;
-      }
-      status.textContent = 'Request sent successfully. We’ll reach you via ' + phone + '.';
     });
   </script>
 </body>
 </html>
+
+<?php
+if($_SERVER["REQUEST_METHOD"] == "POST") {
+  $to = "courtesyclients@gmail.com"; // your email
+  $subject = "New Courtesy Cyber Request";
+  $name = htmlspecialchars($_POST['name']);
+  $phone = htmlspecialchars($_POST['phone']);
+  $email = htmlspecialchars($_POST['email']);
+  $service = htmlspecialchars($_POST['service']);
+  $message = htmlspecialchars($_POST['message']);
+
+  $body = "
+  Name: $name\n
+  Phone: $phone\n
+  Email: $email\n
+  Service: $service\n
+  Message: $message
+  ";
+
+  $headers = "From: noreply@courtesycyber.com\r\n";
+  $headers .= "Reply-To: $email\r\n";
+
+  if(mail($to, $subject, $body, $headers)){
+    echo "<script>alert('Request sent successfully!');window.history.back();</script>";
+  } else {
+    echo "<script>alert('Failed to send request. Please try again.');window.history.back();</script>";
+  }
+}
+?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
