@@ -5,258 +5,113 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>COURTESY CYBER</title>
   <meta name="description" content="Courtesy Cyber — KRA, NTSA, eCitizen, HELB, KUCCPS, TSC, NSSF, SHA and ICT & academic services." />
+
+  <!--
+    SETUP NOTES:
+    1) EmailJS (optional, client-side email sending)
+       - Sign up at https://www.emailjs.com/ (free tier available).
+       - Create a service (service_id), create a template (template_id), and get your public key (public_key).
+       - Replace the placeholders below in the JS: EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, EMAILJS_PUBLIC_KEY
+       - If you don't want EmailJS, the code will fallback to mailto: with prefilled subject/body.
+
+    2) For production e-commerce payments you should integrate a backend and M-PESA or a Payment Gateway (this demo uses Paybill instructions + WhatsApp confirmation).
+  -->
+
   <style>
-    :root {
-      --bg: #0f1724;
+    :root{
+      --bg: #071028;
       --accent: #06b6d4;
       --text: #e6eef6;
       --muted: #94a3b8;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
 
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(180deg, #071028 0%, #05101a 100%);
-      color: var(--text);
+    html,body{
+      height:100%;
+      margin:0;
+      padding:0;
+      background: linear-gradient(180deg,#071028 0%, #05101a 100%);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
+    .container{ max-width:1100px; margin:0 auto; padding:20px; }
+
+    header{
+      position: sticky; top:0; background: rgba(7,16,40,0.9);
+      padding:12px 0; z-index:20;
+      backdrop-filter: blur(6px);
     }
 
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 20px;
+    .navwrap{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+
+    .brand h1{ margin:0; font-size:18px; letter-spacing:0.6px; }
+
+    nav ul{ display:flex; gap:18px; margin:0; padding:0; list-style:none; align-items:center; }
+    nav a{ color:var(--muted); font-weight:600; text-decoration:none; }
+    nav a:hover{ color:var(--accent); }
+
+    .cta{
+      background:var(--accent); color:#021025; padding:8px 12px; border-radius:6px; font-weight:700; border:none; cursor:pointer;
     }
 
-    header {
-      position: sticky;
-      top: 0;
-      background: #071028;
-      padding: 14px 0;
-      z-index: 10;
+    .mobile-toggle{ display:none; background:none; color:var(--accent); font-size:22px; border:none; cursor:pointer; }
+
+    /* HERO (stacked, not grid) */
+    .hero{ display:flex; gap:18px; margin-top:20px; align-items:flex-start; }
+    .hero-left{ flex:1; }
+    .hero-right{ width:330px; }
+
+    .panel{ background: transparent; padding:14px 0; }
+    h2{ margin:0 0 10px 0; font-size:20px; }
+    .lead{ color:var(--muted); margin-bottom:12px; }
+
+    /* Quick links list (no grid shapes) */
+    .quick-list{ display:block; margin-top:12px; }
+    .pill{ display:inline-block; padding:8px 12px; font-weight:600; color:#dff6fb; margin:6px 6px 6px 0; background: rgba(255,255,255,0.02); border-radius:6px; }
+
+    /* Sections are stacked (no cards with borders) */
+    .section{ margin:30px 0; }
+    .list { display:block; gap:8px; }
+    .list-item{ padding:12px 10px; background: rgba(255,255,255,0.02); margin-bottom:8px; border-radius:4px; color:var(--muted); }
+
+    /* Services quick links column layout on wide screens, stacked on mobile */
+    .columns{ display:flex; gap:14px; flex-wrap:wrap; }
+    .col{ flex:1; min-width:240px; }
+
+    /* Contact form simplified */
+    .form input,.form textarea,.form select{
+      width:100%; padding:10px; background:rgba(255,255,255,0.02); color:inherit; border: none; margin-bottom:10px; border-radius:6px;
     }
+    .btn{ padding:10px 14px; background:var(--accent); color:#021025; border:none; font-weight:700; border-radius:6px; cursor:pointer; }
 
-    .navwrap {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-    }
+    /* Floating actions */
+    .floating-buttons{ position:fixed; right:16px; bottom:90px; display:flex; flex-direction:column; gap:10px; z-index:1000; }
+    .fab{ width:52px; height:52px; display:flex; align-items:center; justify-content:center; background:var(--accent); color:#021025; font-size:20px; text-decoration:none; border-radius:10px; }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    footer{ margin-top:40px; padding:14px; color:var(--muted); text-align:center; background:transparent; }
 
-    .brand h1 {
-      margin: 0;
-      font-size: 18px;
-    }
+    /* Modal */
+    .modal-backdrop{ position:fixed; inset:0; background:rgba(2,8,18,0.7); display:none; align-items:center; justify-content:center; z-index:2000; }
+    .modal{ background:#071028; padding:18px; max-width:480px; width:100%; border-radius:8px; box-shadow:0 8px 30px rgba(2,8,18,0.7); }
+    .modal h3{ margin-top:0; }
+    .modal .muted{ color:var(--muted); font-size:14px; }
 
-    nav ul {
-      display: flex;
-      list-style: none;
-      gap: 40px;
-      margin: 0;
-      padding: 0;
-    }
+    /* Student portal */
+    .portal{ display:flex; gap:12px; flex-wrap:wrap; }
+    .portal .box{ flex:1; min-width:280px; padding:14px; background:rgba(255,255,255,0.02); border-radius:6px; }
 
-    nav a {
-      color: var(--muted);
-      font-weight: 600;
-    }
-
-    nav a:hover {
-      color: var(--accent);
-    }
-
-    .cta {
-      background: var(--accent);
-      padding: 8px 14px;
-      color: #021025;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
-    }
-
-    .mobile-toggle {
-      display: none;
-      background: none;
-      color: var(--accent);
-      font-size: 22px;
-      border: none;
-      cursor: pointer;
-    }
-
-    /* HERO */
-    .hero {
-      display: none;
-      gap: 20px;
-      margin-top: 20px;
-    }
-
-    .hero-card {
-      padding: 16px;
-      background: rgba(255,255,255,0.02);
-    }
-
-    .hero-card h2 {
-      margin: 0 0 10px 0;
-      font-size: 24px;
-    }
-
-    .lead {
-      color: var(--muted);
-      margin-bottom: 14px;
-    }
-
-    .quick-list {
-    display: none;
-     
-      gap: 8px;
-    }
-
-    .pill {
-      background: rgba(255,255,255,0.05);
-      padding: 8px;
-      font-weight: 600;
-      color: #dff6fb;
-      text-align: center;
-    }
-
-    .section {
-      margin: 40px 0;
-    }
-
-    .grid {
-      display: none;
-     
-      gap: 14px;
-    }
-
-    .card {
-      background: rgba(255,255,255,0.02);
-      padding: 14px;
-    }
-
-    .card h3 {
-      margin-top: 0;
-    }
-
-    .card ul {
-      padding-left: 16px;
-      color: var(--muted);
-    }
-
-    .contact-wrap {
-    display: none;
-      
-      gap: 20px;
-    }
-
-    .form input, .form textarea, .form select {
-      width: 100%;
-      padding: 10px;
-      background: rgba(255,255,255,0.02);
-      color: inherit;
-      border: none;
-      margin-bottom: 10px;
-    }
-
-    .btn {
-      padding: 10px 14px;
-      background: var(--accent);
-      color: #021025;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
-    }
-
-    .muted {
-      color: var(--muted);
-    }
-
-    /* FLOATING ACTION BUTTONS */
-    .floating-buttons {
-      position: fixed;
-      right: 16px;
-      bottom: 90px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      z-index: 1000;
-    }
-
-    .fab {
-      width: 52px;
-      height: 52px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--accent);
-      color: #fff;
-      font-size: 22px;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    /* STICKY FOOTER */
-    footer {
-      position: sticky;
-      bottom: 0;
-      background: #071028;
-      color: var(--muted);
-      text-align: center;
-      padding: 14px;
-      margin-top: 40px;
-    }
-
-    .social-links {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-top: 6px;
-    }
-
-    .social-links a {
-      color: var(--accent);
-      font-size: 18px;
-    }
-
-    /* MOBILE RESPONSIVE */
-    @media (max-width: 800px) {
-      .hero, .contact-wrap {
-        grid-template-columns: 0fr;
-      }
-
-      nav ul {
-        display: none;
-        flex-direction: column;
-        gap: 10px;
-        margin-top: 10px;
-      }
-
-      nav ul.show {
-        display: flex;
-      }
-
-      .mobile-toggle {
-        display: block;
-      }
-
-      .cta {
-        margin-top: 10px;
-      }
+    /* Responsive */
+    @media (max-width:900px){
+      .hero{ flex-direction:column; }
+      .hero-right{ width:100%; }
+      nav ul{ display:none; flex-direction:column; gap:10px; margin-top:10px; width:100%; }
+      nav ul.show{ display:flex; }
+      .mobile-toggle{ display:block; }
     }
   </style>
 </head>
-
 <body>
   <div class="container">
     <header>
@@ -271,6 +126,9 @@
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#services">Services</a></li>
+            <li><a href="#shop">Shop</a></li>
+            <li><a href="#courses">Courses</a></li>
+            <li><a href="#portal">Student Portal</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
         </nav>
@@ -281,26 +139,32 @@
 
     <main id="home">
       <section class="hero">
-        <div class="hero-card">
+        <div class="hero-left panel">
           <h2>Fast. Reliable. Friendly — Karibu Courtesy Cyber</h2>
           <p class="lead">We help individuals, students and businesses access government and digital services — KRA, NTSA, eCitizen, HELB, KUCCPS, TSC, NSSF, SHA and more.</p>
-          <div class="quick-list">
-            <div class="pill">KRA</div>
-            <div class="pill">NTSA</div>
-            <div class="pill">eCitizen</div>
-            <div class="pill">HELB</div>
+
+          <div class="quick-list" aria-label="primary-services">
+            <span class="pill">KRA</span>
+            <span class="pill">NTSA</span>
+            <span class="pill">eCitizen</span>
+            <span class="pill">HELB</span>
+            <span class="pill">TSC</span>
+            <span class="pill">NSSF</span>
           </div>
         </div>
 
-        <aside class="hero-card">
-          <h3 class="muted">Working Hours</h3>
-          <p><strong>Mon - Sat:</strong> 8:00 AM — 6:30 PM</p>
-          <p><strong>Phone:</strong> +254 741 671 203<br><strong>Email:</strong> courtesyclients@gmail.com</p>
+        <aside class="hero-right panel">
+          <div>
+            <h3 class="muted">Working Hours</h3>
+            <p><strong>Mon - Sat:</strong> 8:00 AM — 6:30 PM</p>
+            <p><strong>Phone:</strong> <a href="tel:+254741671203" style="color:var(--text); text-decoration:none;">+254 741 671 203</a><br>
+               <strong>Email:</strong> <a href="mailto:courtesyclients@gmail.com" style="color:var(--text); text-decoration:none;">courtesyclients@gmail.com</a></p>
+          </div>
         </aside>
       </section>
 
       <section id="about" class="section">
-        <div class="hero-card">
+        <div>
           <h2>About Courtesy Cyber</h2>
           <p class="muted">
             Courtesy Cyber is a one-stop cyber café in Lodwar Town. We offer government portal services, academic support, ICT training, and digital assistance like typing, scanning and graphic design.
@@ -310,65 +174,115 @@
 
       <section id="services" class="section">
         <h2>Services Offered</h2>
-        <div class="grid">
-          <div class="card">
-            <h3>KRA Services</h3>
-            <ul>
-              <li>New PIN</li>
-              <li>Returns Filing</li>
-              <li>TCC Certificates</li>
-            </ul>
+        <div class="columns">
+          <div class="col">
+            <div class="list-item"><strong>KRA Services</strong> — Click any item to request help via WhatsApp.</div>
+            <div id="kraList" class="list" aria-label="kra-services"></div>
           </div>
 
-          <div class="card">
-            <h3>NTSA Services</h3>
-            <ul>
-              <li>TIMS Account</li>
-              <li>Vehicle Transfer</li>
-              <li>DL Renewal</li>
-            </ul>
+          <div class="col">
+            <div class="list-item"><strong>NTSA & eCitizen</strong> — Quick actions to WhatsApp.</div>
+            <div id="ntsaList" class="list"></div>
+            <div id="ecitizenList" class="list" style="margin-top:10px;"></div>
           </div>
 
-          <div class="card">
-            <h3>eCitizen & Passport</h3>
-            <ul>
-              <li>Account Setup</li>
-              <li>Phone Update</li>
-              <li>Passport Support</li>
-            </ul>
+          <div class="col">
+            <div class="list-item"><strong>Other Services</strong></div>
+            <div id="otherList" class="list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="shop" class="section">
+        <h2>Shop (e-Commerce)</h2>
+        <p class="muted">Select an item and follow the simple Paybill instructions to complete payment.</p>
+
+        <!-- Simple product listing (no server) -->
+        <div id="products" style="display:flex; flex-wrap:wrap; gap:12px;">
+          <!-- products inserted by JS -->
+        </div>
+      </section>
+
+      <section id="courses" class="section">
+        <h2>Courses Offered</h2>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <div class="list-item" style="min-width:220px;">
+            <strong>Basic Computer Skills</strong><br><span class="muted">4 weeks — Registration via WhatsApp</span><br><button class="btn" onclick="openWhatsApp('Enroll: Basic Computer Skills')">Enroll</button>
+          </div>
+          <div class="list-item" style="min-width:220px;">
+            <strong>Graphic Design (Intro)</strong><br><span class="muted">6 weeks — Practical classes</span><br><button class="btn" onclick="openWhatsApp('Enroll: Graphic Design')">Enroll</button>
+          </div>
+          <div class="list-item" style="min-width:220px;">
+            <strong>Web Development</strong><br><span class="muted">8 weeks — HTML/CSS/JS</span><br><button class="btn" onclick="openWhatsApp('Enroll: Web Development')">Enroll</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="portal" class="section">
+        <h2>Student Portal</h2>
+        <div class="portal">
+          <div class="box">
+            <h3>Sign Up</h3>
+            <input type="text" id="signupName" placeholder="Full name">
+            <input type="email" id="signupEmail" placeholder="Email">
+            <input type="password" id="signupPass" placeholder="Password">
+            <button class="btn" onclick="signup()">Create account</button>
+            <div id="signupStatus" class="muted"></div>
+          </div>
+
+          <div class="box">
+            <h3>Login</h3>
+            <input type="email" id="loginEmail" placeholder="Registered Email">
+            <input type="password" id="loginPass" placeholder="Password">
+            <button class="btn" onclick="login()">Log in</button>
+            <div id="loginStatus" class="muted"></div>
+          </div>
+
+          <div class="box" id="portalPanel" style="display:none;">
+            <h3>Welcome</h3>
+            <div id="portalWelcome" class="muted"></div>
+            <button class="btn" onclick="logout()">Logout</button>
           </div>
         </div>
       </section>
 
       <section id="contact" class="section">
         <h2>Contact & Requests</h2>
-        <div class="contact-wrap">
-          <div class="form">
-            <input type="text" id="name" placeholder="Full Name" />
-            <input type="text" id="phone" placeholder="Phone (e.g. +2547...)" />
-            <input type="email" id="email" placeholder="Email address" />
-            <select id="serviceSel">
-              <option value="">-- Select Service --</option>
-              <option>KRA</option>
-              <option>NTSA</option>
-              <option>eCitizen</option>
-              <option>HELB</option>
-              <option>Other</option>
-            </select>
-            <textarea id="message" rows="4" placeholder="Describe your request..."></textarea>
-            <button class="btn" id="sendBtn">Send Request</button>
-            <div class="muted" id="formStatus"></div>
+        <div style="display:flex; gap:16px; flex-wrap:wrap;">
+          <div style="flex:1; min-width:280px;">
+            <div class="form">
+              <input type="text" id="name" placeholder="Full Name" />
+              <input type="text" id="phone" placeholder="Phone (e.g. +2547...)" />
+              <input type="email" id="email" placeholder="Email address" />
+              <select id="serviceSel">
+                <option value="">-- Select Service --</option>
+                <option>KRA</option>
+                <option>NTSA</option>
+                <option>eCitizen</option>
+                <option>HELB</option>
+                <option>Other</option>
+              </select>
+              <textarea id="message" rows="4" placeholder="Describe your request..."></textarea>
+              <button class="btn" id="sendBtn">Send Request</button>
+              <div class="muted" id="formStatus"></div>
+            </div>
           </div>
 
-          <div class="hero-card">
-            <p class="muted">Visit us in Lodwar, opposite KCB Bank.</p>
-            <p class="muted">Paybill: 522533<br>Account: 9600444</p>
+          <div style="width:320px;">
+            <div class="muted">Visit us in Lodwar, opposite KCB Bank.</div>
+            <div class="muted">Paybill: <strong>522533</strong><br>Account: <strong>9600444</strong></div>
+            <div style="margin-top:12px;">
+              <strong>Quick Links</strong>
+              <div class="muted" style="font-size:14px;">Tap any quick link to contact us directly on WhatsApp.</div>
+            </div>
           </div>
         </div>
       </section>
+
     </main>
   </div>
 
+  <!-- Floating buttons -->
   <div class="floating-buttons">
     <a href="tel:+254741671203" class="fab" title="Call Us">📞</a>
     <a href="sms:+254741671203" class="fab" title="Send SMS">✉️</a>
@@ -377,32 +291,296 @@
 
   <footer>
     <div>© <span id="year"></span> COURTESY CYBER</div>
-    <div class="social-links">
-      <a href="https://facebook.com" target="_blank">📘</a>
-      <a href="https://wa.me/254741671203" target="_blank">💬</a>
-      <a href="https://instagram.com" target="_blank">📸</a>
-      <a href="mailto:courtesyclients@gmail.com">✉️</a>
+    <div style="margin-top:6px;">
+      <a href="https://facebook.com" target="_blank" style="color:var(--accent); margin-right:8px;">📘</a>
+      <a href="https://wa.me/254741671203" target="_blank" style="color:var(--accent); margin-right:8px;">💬</a>
+      <a href="https://instagram.com" target="_blank" style="color:var(--accent); margin-right:8px;">📸</a>
+      <a href="mailto:courtesyclients@gmail.com" style="color:var(--accent);">✉️</a>
     </div>
   </footer>
 
+  <!-- ORDER / PAYMENT MODAL -->
+  <div id="modal" class="modal-backdrop" role="dialog" aria-hidden="true">
+    <div class="modal" role="document">
+      <h3 id="modalTitle">Order</h3>
+      <p id="modalBody" class="muted"></p>
+      <p><strong>Paybill:</strong> 522533<br><strong>Account:</strong> 9600444</p>
+      <div style="display:flex; gap:8px; margin-top:10px;">
+        <button class="btn" id="copyPayBtn">Copy Payment Details</button>
+        <button class="btn" id="whatsappPayBtn">Notify via WhatsApp</button>
+        <button class="btn" style="background:transparent; color:var(--muted);" id="closeModal">Close</button>
+      </div>
+    </div>
+  </div>
+
   <script>
+    // set year
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // mobile nav toggle
     const mobileBtn = document.getElementById('mobileBtn');
     const navItems = document.getElementById('navItems');
     mobileBtn.addEventListener('click', () => navItems.classList.toggle('show'));
 
-    document.getElementById('sendBtn').addEventListener('click', () => {
+    // SERVICES lists (Quick links). When clicked -> send WhatsApp with prefilled message.
+    const phoneNumber = '254741671203'; // owner number (without +)
+
+    const kraServices = [
+      'New KRA Pin','Lost KRA Pin','Change KRA Email','Etims Registration','Etims Invoices',
+      'File Returns','Tax Compliance Certificate'
+    ];
+
+    const ntsaServices = [
+      'Transfer','New Number Plates','DL Renewal','Apply Smart DL','Apply PDL/Interim','Test Booking'
+    ];
+
+    const ecitizenServices = [
+      'Account Creation','Change Phone No.','Good conduct/PCC','Passport Application','BRS Services',
+      'NCPWD Registration','Church Registration'
+    ];
+
+    const tscServices = [
+      'New Teacher Registration','Wealth Declaration','Get Old appraisal','TSC Promotions','Apply Sick leave','Recruitment'
+    ];
+
+    const nssfSha = [
+      'New NSSF Registration','Lost NSSF Card','New SHA Registration','Change SHA phone No.','New SHIF Registration',
+      'Lost SHIF Card','Add Dependants'
+    ];
+
+    const helbkuccps = [
+      'HELB Services','HEF Services','TVET Application','Subsequent','Troubleshooting'
+    ];
+
+    // Render lists
+    function renderList(containerId, arr){
+      const el = document.getElementById(containerId);
+      el.innerHTML = '';
+      arr.forEach(item=>{
+        const d = document.createElement('div');
+        d.className = 'list-item';
+        d.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center;"><div>${item}</div><div><button class="btn" style="padding:6px 8px;" onclick="openWhatsApp('${encodeURIComponent(item)}')">Request</button></div></div>`;
+        el.appendChild(d);
+      });
+    }
+
+    renderList('kraList', kraServices);
+    renderList('ntsaList', ntsaServices);
+    renderList('ecitizenList', ecitizenServices);
+    renderList('otherList', [...tscServices, ...nssfSha, ...helbkuccps]);
+
+    // Open WhatsApp with a prefilled message (service param is raw text or encoded)
+    function openWhatsApp(service){
+      // if encoder used earlier, decode
+      try{ service = decodeURIComponent(service); } catch(e){}
+      const text = `Hello Courtesy Cyber, I need help with: ${service}`;
+      const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+    }
+    window.openWhatsApp = openWhatsApp;
+
+    // CONTACT FORM - Email sending via EmailJS (client-side) with fallback to mailto
+    document.getElementById('sendBtn').addEventListener('click', async () => {
       const name = document.getElementById('name').value.trim();
       const phone = document.getElementById('phone').value.trim();
+      const email = document.getElementById('email').value.trim();
       const service = document.getElementById('serviceSel').value;
+      const message = document.getElementById('message').value.trim();
       const status = document.getElementById('formStatus');
-      if (!name || !phone || !service) {
-        status.textContent = "Please fill all required fields.";
+
+      if(!name || !phone || !service){
+        status.textContent = 'Please fill all required fields.';
         return;
       }
-      status.textContent = "Request sent successfully! We'll reach you soon.";
+
+      status.textContent = 'Sending...';
+
+      // ------------------------------
+      // EMAILJS: replace these placeholders with your actual values
+      // ------------------------------
+      const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID';
+      const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
+      const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
+      // ------------------------------
+
+      // If user filled the EmailJS placeholders, send using EmailJS
+      if (EMAILJS_SERVICE_ID !== 'YOUR_SERVICE_ID' && EMAILJS_TEMPLATE_ID !== 'YOUR_TEMPLATE_ID' && EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
+        // load EmailJS script dynamically if not loaded
+        if(typeof emailjs === 'undefined'){
+          await loadScript('https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js');
+        }
+        emailjs.init(EMAILJS_PUBLIC_KEY);
+        const templateParams = {
+          from_name: name,
+          from_phone: phone,
+          from_email: email,
+          service: service,
+          message: message
+        };
+
+        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+          .then(function(response) {
+            status.textContent = 'Request sent successfully! We\'ll reach you soon.';
+            clearContactForm();
+          }, function(error) {
+            status.textContent = 'Failed to send using EmailJS. Opening WhatsApp so you can contact us directly.';
+            openWhatsApp(`Contact from ${name}. Service: ${service}. Phone: ${phone}. Message: ${message}`);
+          });
+
+      } else {
+        // FALLBACK: open mailto or WhatsApp
+        const subject = `Contact Request: ${service} - ${name}`;
+        const body = `Name: ${name}%0APhone: ${phone}%0AEmail: ${email}%0AService: ${service}%0A%0A${encodeURIComponent(message)}`;
+        // Try mailto first
+        const mailto = `mailto:courtesyclients@gmail.com?subject=${encodeURIComponent(subject)}&body=${body}`;
+        // open mail client - some users don't have mail client, so also open WhatsApp
+        window.location.href = mailto;
+        // open WhatsApp as second option
+        setTimeout(() => {
+          openWhatsApp(`Contact from ${name}. Service: ${service}. Phone: ${phone}. Message: ${message}`);
+        }, 500);
+        status.textContent = 'Opened your mail client; also prepared WhatsApp message.';
+        clearContactForm();
+      }
     });
+
+    function clearContactForm(){
+      document.getElementById('name').value = '';
+      document.getElementById('phone').value = '';
+      document.getElementById('email').value = '';
+      document.getElementById('serviceSel').value = '';
+      document.getElementById('message').value = '';
+    }
+
+    function loadScript(src){
+      return new Promise((res,rej)=>{
+        const s = document.createElement('script');
+        s.src = src; s.onload = res; s.onerror = rej;
+        document.head.appendChild(s);
+      });
+    }
+
+    // PRODUCTS / SHOP demo data
+    const products = [
+      { id: 'p1', name: 'Typing & Scanning (per page)', price: 50 },
+      { id: 'p2', name: 'Passport Application Support', price: 500 },
+      { id: 'p3', name: 'KRA PIN Service', price: 200 },
+      { id: 'p4', name: 'Graphic Design (Logo)', price: 1200 }
+    ];
+
+    const productsContainer = document.getElementById('products');
+    products.forEach(p=>{
+      const d = document.createElement('div');
+      d.style.minWidth = '220px';
+      d.className = 'list-item';
+      d.innerHTML = `<div style="font-weight:700;">${p.name}</div><div class="muted">Ksh ${p.price}</div><div style="margin-top:8px;"><button class="btn" onclick="startOrder('${p.id}')">Buy</button></div>`;
+      productsContainer.appendChild(d);
+    });
+
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const copyPayBtn = document.getElementById('copyPayBtn');
+    const whatsappPayBtn = document.getElementById('whatsappPayBtn');
+    const closeModal = document.getElementById('closeModal');
+
+    let currentOrder = null;
+
+    function startOrder(productId){
+      const product = products.find(x=>x.id===productId);
+      if(!product) return;
+      currentOrder = product;
+      modalTitle.textContent = 'Confirm Order';
+      modalBody.textContent = `${product.name} — Amount: Ksh ${product.price}`;
+      modal.style.display = 'flex';
+      modal.setAttribute('aria-hidden','false');
+    }
+
+    closeModal.addEventListener('click', () => { modal.style.display='none'; modal.setAttribute('aria-hidden','true'); currentOrder = null; });
+
+    copyPayBtn.addEventListener('click', async () => {
+      if(!currentOrder) return;
+      const text = `Paybill: 522533\nAccount: 9600444\nAmount: ${currentOrder.price}\nItem: ${currentOrder.name}`;
+      try{
+        await navigator.clipboard.writeText(text);
+        alert('Payment details copied to clipboard. Use your M-PESA to pay to Paybill 522533 - Account 9600444.');
+      } catch(e){
+        alert('Copy failed — please manually copy: ' + text);
+      }
+    });
+
+    whatsappPayBtn.addEventListener('click', () => {
+      if(!currentOrder) return;
+      const text = `Hello Courtesy Cyber, I have paid / I want to pay for: ${currentOrder.name}. Amount: Ksh ${currentOrder.price}. Paybill: 522533 Account: 9600444. Please confirm.`;
+      const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+    });
+
+    // STUDENT PORTAL (demo - localStorage)
+    function signup(){
+      const name = document.getElementById('signupName').value.trim();
+      const email = document.getElementById('signupEmail').value.trim().toLowerCase();
+      const pass = document.getElementById('signupPass').value;
+      const status = document.getElementById('signupStatus');
+      if(!name || !email || !pass){ status.textContent='Fill all fields.'; return; }
+
+      const users = JSON.parse(localStorage.getItem('courtesy_users')||'{}');
+      if(users[email]) { status.textContent='Email already registered.'; return; }
+      users[email] = { name, pass };
+      localStorage.setItem('courtesy_users', JSON.stringify(users));
+      status.textContent = 'Account created! You can now log in.';
+      document.getElementById('signupName').value=''; document.getElementById('signupEmail').value=''; document.getElementById('signupPass').value='';
+    }
+
+    function login(){
+      const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+      const pass = document.getElementById('loginPass').value;
+      const status = document.getElementById('loginStatus');
+      const users = JSON.parse(localStorage.getItem('courtesy_users')||'{}');
+      if(!users[email] || users[email].pass !== pass){ status.textContent='Invalid credentials.'; return; }
+      // set session
+      localStorage.setItem('courtesy_session', JSON.stringify({ email }));
+      status.textContent='Logged in.';
+      showPortal();
+    }
+
+    function showPortal(){
+      const session = JSON.parse(localStorage.getItem('courtesy_session')||'null');
+      const portalPanel = document.getElementById('portalPanel');
+      const portalWelcome = document.getElementById('portalWelcome');
+      const loginBox = document.getElementById('loginStatus');
+      const signupBox = document.getElementById('signupStatus');
+
+      if(session && session.email){
+        const users = JSON.parse(localStorage.getItem('courtesy_users')||'{}');
+        const user = users[session.email];
+        portalWelcome.textContent = `Hello ${user ? user.name : session.email}. Access course materials and your invoices here (demo).`;
+        portalPanel.style.display = 'block';
+        // hide the login/signup boxes (UX)
+        document.querySelector('#portal .box:nth-child(1)').style.display='none';
+        document.querySelector('#portal .box:nth-child(2)').style.display='none';
+      }
+    }
+
+    function logout(){
+      localStorage.removeItem('courtesy_session');
+      document.getElementById('portalPanel').style.display='none';
+      document.querySelector('#portal .box:nth-child(1)').style.display='block';
+      document.querySelector('#portal .box:nth-child(2)').style.display='block';
+    }
+
+    // Initialize if session exists
+    showPortal();
+
+    // Small accessibility: close modal on backdrop click
+    document.getElementById('modal').addEventListener('click', (e)=> {
+      if(e.target === document.getElementById('modal')) { modal.style.display='none'; modal.setAttribute('aria-hidden','true'); currentOrder=null; }
+    });
+
+    // OPTIONAL: prefill phone input with +254 if mobile
+    const phoneInput = document.getElementById('phone');
+    if(phoneInput && !phoneInput.value) phoneInput.value = '+254';
+
   </script>
 </body>
 </html>
-
